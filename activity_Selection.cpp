@@ -3,44 +3,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Comparator for sorting by finish time
-bool compare(pair<int, int> a, pair<int, int> b)
+void activitySelection(int start[], int finish[], int n)
 {
-    return a.second < b.second;
-}
+    // Sort activities by finish time using bubble sort
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (finish[j] > finish[j + 1])
+            {
+                swap(finish[j], finish[j + 1]);
+                swap(start[j], start[j + 1]);
+            }
+        }
+    }
 
-void activitySelection(pair<int, int> activities[], int n)
-{
-    sort(activities, activities + n, compare);
-
-    cout << "Selected activities (start, finish):" << endl;
-    int lastFinish = activities[0].second;
-    cout << "(" << activities[0].first << ", " << activities[0].second << ")" << endl;
+    cout << "Selected activities (start, finish):\n";
+    int lastFinish = finish[0];
+    cout << "(" << start[0] << ", " << finish[0] << ")\n";
 
     for (int i = 1; i < n; i++)
     {
-        if (activities[i].first >= lastFinish)
+        if (start[i] >= lastFinish)
         {
-            cout << "(" << activities[i].first << ", " << activities[i].second << ")" << endl;
-            lastFinish = activities[i].second;
+            cout << "(" << start[i] << ", " << finish[i] << ")\n";
+            lastFinish = finish[i];
         }
     }
 }
-
 int main()
 {
     int n;
     cout << "Enter number of activities: ";
     cin >> n;
 
-    pair<int, int> activities[n]; // first = start, second = finish
-    cout << "Enter start and finish times:" << endl;
+    int start[100], finish[100];
+    cout << "Enter start and finish times:\n";
     for (int i = 0; i < n; i++)
     {
-        cin >> activities[i].first >> activities[i].second;
+        cin >> start[i] >> finish[i];
     }
 
-    activitySelection(activities, n);
+    activitySelection(start, finish, n);
 
     return 0;
 }
