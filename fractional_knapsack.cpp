@@ -1,53 +1,60 @@
+// Write a program to develop the fractional knapsack problem.
 #include <bits/stdc++.h>
 using namespace std;
-int main()
-{
-    int n, cap, p[100], w[100], totalp = 0, i;
-    double ratio[100];
-    cout << "Enter n: ";
-    cin >> n;
-    cout << "\nEnter capacity: ";
-    cin >> cap;
 
+float fractionalKnapsack(int W, int profit[], int weight[], int n)
+{
+    float ratio[100];
+
+    // Calculate profit/weight ratio
     for (int i = 0; i < n; i++)
+        ratio[i] = (float)profit[i] / weight[i];
+
+    // Sort items by ratio in descending order
+    for (int i = 0; i < n - 1; i++)
     {
-        cout << "p[" << i << "]: ";
-        cin >> p[i];
-    }
-    cout << endl;
-    for (int i = 0; i < n; i++)
-    {
-        cout << "w[" << i << "]: ";
-        cin >> w[i];
-    }
-    for (int i = 0; i < n; i++)
-    {
-        ratio[i] = p[i] / w[i];
-    }
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = i + 1; j < n; j++)
+        for (int j = 0; j < n - i - 1; j++)
         {
-            if (ratio[i] < ratio[j])
+            if (ratio[j] < ratio[j + 1])
             {
-                swap(ratio[i], ratio[j]);
-                swap(p[i], p[j]);
-                swap(w[i], w[j]);
+                swap(ratio[j], ratio[j + 1]);
+                swap(profit[j], profit[j + 1]);
+                swap(weight[j], weight[j + 1]);
             }
         }
     }
+
+    float totalValue = 0;
     for (int i = 0; i < n; i++)
     {
-        if (cap < w[i])
-            break;
+        if (weight[i] <= W)
+        {
+            totalValue += profit[i];
+            W -= weight[i];
+        }
         else
         {
-            totalp += p[i];
-            cap -= w[i];
+            totalValue += ratio[i] * W;
+            break;
         }
     }
-    if (i < n)
-        totalp += ratio[i] * cap;
+    return totalValue;
+}
 
-    cout << "Max profit: " << totalp << endl;
+int main()
+{
+    int n, W;
+    cout << "Enter number of items: ";
+    cin >> n;
+    cout << "Enter knapsack capacity: ";
+    cin >> W;
+
+    int profit[100], weight[100];
+    cout << "Enter profit and weight for each item:\n";
+    for (int i = 0; i < n; i++)
+        cin >> profit[i] >> weight[i];
+
+    float maxProfit = fractionalKnapsack(W, profit, weight, n);
+    cout << "Maximum profit: " << maxProfit << endl;
+    return 0;
 }

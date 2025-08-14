@@ -1,3 +1,5 @@
+// You are given a set of items in ascending order.
+// Now implement the interpolation search to find a key item in the array.
 #include <bits/stdc++.h>
 using namespace std;
 
