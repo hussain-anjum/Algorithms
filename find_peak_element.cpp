@@ -17,8 +17,10 @@ int findPeak(int arr[], int low, int high, int n)
 int main()
 {
     int n;
+    cout << "Enter the number of elements:";
     cin >> n;
     int arr[100];
+    cout << "Enter the elements:";
     for (int i = 0; i < n; i++)
         cin >> arr[i];
     int peakIndex = findPeak(arr, 0, n - 1, n);
