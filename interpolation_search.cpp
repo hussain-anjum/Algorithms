@@ -3,48 +3,43 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int interpolationSearch(int arr[], int n, int key)
+int interpolationSearch(int arr[], int low, int high, int k, int n)
 {
-    int low = 0, high = n - 1;
+    if (k < arr[low] || k > arr[high])
+        return -1;
 
-    while (low <= high && key >= arr[low] && key <= arr[high])
+    if (arr[low] == arr[high])
     {
-        if (low == high)
-        {
-            if (arr[low] == key)
-                return low;
-            return -1;
-        }
-
-        // Estimate position
-        int pos = low + ((double)(key - arr[low]) * (high - low)) / (arr[high] - arr[low]);
-
-        if (arr[pos] == key)
-            return pos;
-
-        if (arr[pos] < key)
-            low = pos + 1;
+        if (arr[low] == k)
+            return low;
         else
-            high = pos - 1;
+            return -1;
     }
-    return -1;
-}
 
+    int pos = low + ((k - arr[low]) * (high - low)) / (arr[high] - arr[low]);
+
+    if (arr[pos] == k)
+        return pos;
+    else if (k < arr[pos])
+        return interpolationSearch(arr, low, pos - 1, k, n);
+    else
+        return interpolationSearch(arr, pos + 1, high, k, n);
+}
 int main()
 {
-    int arr[] = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
-    int n = sizeof(arr) / sizeof(arr[0]);
-    int key;
-
-    cout << "Enter the element to search: ";
+    int n, arr[100], key;
+    cout << "Enter n: ";
+    cin >> n;
+    cout << "Enter elements(sorted): ";
+    for (int i = 0; i < n; i++)
+    {
+        cin >> arr[i];
+    }
+    cout << "Enter key item: ";
     cin >> key;
-
-    int index = interpolationSearch(arr, n, key);
-
-    if (index != -1)
-        cout << "Element found at index " << index << endl;
+    int r = interpolationSearch(arr, 0, n - 1, key, n);
+    if (r == -1)
+        cout << "Item not found" << endl;
     else
-        cout << "Element not found in the array." << endl;
-
-    return 0;
+        cout << "Item found in position: " << r + 1 << endl;
 }
