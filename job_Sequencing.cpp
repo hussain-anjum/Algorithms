@@ -7,51 +7,63 @@ void jobSequencing(char id[], int deadline[], int profit[], int n)
     // Sort jobs by profit in descending order (bubble sort)
     for (int i = 0; i < n - 1; i++)
     {
-        for (int j = 0; j < n - i - 1; j++)
+        for (int j = i + 1; j < n; j++)
         {
-            if (profit[j] < profit[j + 1])
+            if (profit[i] < profit[j])
             {
                 // swap profit
-                int tempP = profit[j];
-                profit[j] = profit[j + 1];
-                profit[j + 1] = tempP;
+                int tempP = profit[i];
+                profit[i] = profit[j];
+                profit[j] = tempP;
                 // swap deadline
-                int tempD = deadline[j];
-                deadline[j] = deadline[j + 1];
-                deadline[j + 1] = tempD;
+                int tempD = deadline[i];
+                deadline[i] = deadline[j];
+                deadline[j] = tempD;
                 // swap id
-                char tempID = id[j];
-                id[j] = id[j + 1];
-                id[j + 1] = tempID;
+                char tempID = id[i];
+                id[i] = id[j];
+                id[j] = tempID;
             }
         }
     }
+    // max deadline
+    int max = deadline[0];
+    for (int i = 0; i < n; i++)
+    {
+        if (deadline[i] > max)
+            max = deadline[i];
+    }
 
     char result[100];
-    bool slot[100] = {false};
     int totalProfit = 0;
 
     // Initialize result array
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < max; i++)
         result[i] = '-';
 
     // Assign jobs to slots
     for (int i = 0; i < n; i++)
     {
-        for (int j = min(n, deadline[i]) - 1; j >= 0; j--)
+        if (result[deadline[i] - 1] == '-')
         {
-            if (!slot[j])
+            result[deadline[i] - 1] = id[i];
+            totalProfit += profit[i];
+        }
+        else
+        {
+            for (int j = deadline[i] - 1; j >= 0; j--)
             {
-                slot[j] = true;
-                result[j] = id[i];
-                totalProfit += profit[i];
-                break;
+                if (result[j] == '-')
+                {
+                    result[j] = id[i];
+                    totalProfit += profit[i];
+                }
             }
         }
     }
 
     cout << "Scheduled jobs: ";
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < max; i++)
     {
         if (result[i] != '-')
             cout << result[i] << " ";
