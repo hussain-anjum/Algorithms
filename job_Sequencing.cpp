@@ -5,7 +5,7 @@ using namespace std;
 void jobSequencing(char id[], int deadline[], int profit[], int n)
 {
     // Sort jobs by profit in descending order (bubble sort)
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < n; i++)
     {
         for (int j = i + 1; j < n; j++)
         {
