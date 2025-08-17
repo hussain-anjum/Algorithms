@@ -1,69 +1,47 @@
 // Create a directed and weighted graph with five or more nodes.
 // Now implement the single source shortest path algorithm to compute the shortest path for a source node s.
 #include <bits/stdc++.h>
+#define inf 1e9
 using namespace std;
-
-int minDistance(int dist[], bool visited[], int V)
-{
-    int minVal = 999999, minIndex = -1;
-    for (int i = 0; i < V; i++)
-    {
-        if (!visited[i] && dist[i] <= minVal)
-        {
-            minVal = dist[i];
-            minIndex = i;
-        }
-    }
-    return minIndex;
-}
-
-void dijkstra(int graph[100][100], int V, int src)
-{
-    int dist[100];
-    bool visited[100];
-
-    // Initialize distance and visited arrays
-    for (int i = 0; i < V; i++)
-    {
-        dist[i] = 999999;
-        visited[i] = false;
-    }
-    dist[src] = 0;
-
-    for (int count = 0; count < V - 1; count++)
-    {
-        int u = minDistance(dist, visited, V);
-        visited[u] = true;
-
-        for (int v = 0; v < V; v++)
-        {
-            if (!visited[v] && graph[u][v] && dist[u] + graph[u][v] < dist[v])
-            {
-                dist[v] = dist[u] + graph[u][v];
-            }
-        }
-    }
-
-    cout << "Vertex\tDistance from Source\n";
-    for (int i = 0; i < V; i++)
-        cout << i << "\t" << dist[i] << endl;
-}
-
 int main()
 {
-    int V, graph[100][100], src;
-    cout << "Enter number of vertices: ";
-    cin >> V;
-
-    cout << "Enter adjacency matrix (0 for no edge):\n";
-    for (int i = 0; i < V; i++)
-        for (int j = 0; j < V; j++)
-            cin >> graph[i][j];
-
-    cout << "Enter source vertex: ";
-    cin >> src;
-
-    dijkstra(graph, V, src);
-
+    cout << "Enter Number of vertex, edge and source: ";
+    int n, m;
+    cin >> n >> m;
+    int source;
+    cin >> source;
+    vector<vector<pair<int, int>>> graph(n + 1, vector<pair<int, int>>());
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    cout << "Enter " << m << " edge with corresponding weights: " << endl;
+    while (m--)
+    {
+        int u, v, d;
+        cin >> u >> v >> d;
+        graph[u].push_back({v, d});
+    }
+    vector<int> dist(n + 1, inf);
+    vector<bool> visited(n + 1, false);
+    dist[source] = 0;
+    pq.push({0, source});
+    while (!pq.empty())
+    {
+        int d = pq.top().first;
+        int node = pq.top().second;
+        pq.pop();
+        if (!visited[node])
+            for (auto &it : graph[node])
+            {
+                int cost = it.second;
+                if (d + cost < dist[it.first])
+                {
+                    pq.push({d + cost, it.first});
+                    dist[it.first] = d + cost;
+                }
+            }
+        visited[node] = true;
+    }
+    cout << "Shortest path:" << endl;
+    for (int i = 1; i <= n; i++)
+        cout << source << " -> " << i << " = " << dist[i] << endl;
     return 0;
 }
