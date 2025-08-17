@@ -1,9 +1,20 @@
 // Build a programming module to compute the Egyption fraction for a given fractional value.
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
 void egyptianFraction(int nr, int dr)
 {
+    if (dr == 0)
+    {
+        cout << "Denominator cannot be zero" << endl;
+        return;
+    }
+    if (nr == 0)
+    {
+        cout << "0" << endl;
+        return;
+    }
+
     cout << nr << "/" << dr << " = ";
 
     while (nr != 0)
